@@ -9,6 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 logging.basicConfig(format="%(asctime)s - %(levelname)s: %(message)s", level=logging.INFO, datefmt="%I:%M:%S")
 
+
 class Diffusion:
     def __init__(self, noise_steps=1000, beta_start=1e-4, beta_end=0.02, img_size=64, device="cuda") -> None:
         self.noise_steps = noise_steps
@@ -25,13 +26,13 @@ class Diffusion:
         return torch.linspace(self.beta_start, self.beta_end, steps=1000)
     
     def noise_images(self, x, t):
-        sqrt_alpha_hat = torch.sqrt(self.alpha_hat[t])[:,None,None,None]
-        sqrt_one_minus_alpha_hat = torch.sqrt(1-self.alpha_hat[t])[:,None,None,None]
+        sqrt_alpha_hat = torch.sqrt(self.alpha_hat[t])[:, None, None, None]
+        sqrt_one_minus_alpha_hat = torch.sqrt(1-self.alpha_hat[t])[:, None, None, None]
         e = torch.rand_like(x)
         return sqrt_alpha_hat * x + sqrt_one_minus_alpha_hat * e, e
     
     def sample_timesteps(self, n):
-        return torch.randint(low=1, high=self.noise_steps,size=(n,))
+        return torch.randint(low=1, high=self.noise_steps, size=(n,))
     
     def sample(self, model, n):
         logging.info(f"Sampling {n} images...")
